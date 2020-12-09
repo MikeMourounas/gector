@@ -12,7 +12,7 @@ SEQ_DELIMETERS = {"tokens": " ",
 
 
 def get_verb_form_dicts():
-    path_to_dict = os.path.join(VOCAB_DIR, "verb-form-vocab.txt")
+    path_to_dict = os.path.join(VOCAB_DIR, "verb-form-vocab.de.txt")
     encode, decode = {}, {}
     with open(path_to_dict, encoding="utf-8") as f:
         for line in f:
@@ -202,4 +202,8 @@ def get_weights_name(transformer_name, lowercase):
     if transformer_name == 'xlnet':
         return 'xlnet-base-cased'
     if transformer_name == 'multilingual':
-        return 'bert-based-multilingual-cased'
+        return 'bert-base-multilingual-cased'
+    if transformer_name == 'bert_de':
+        return 'bert-base-german-cased'
+    if transformer_name == 'distilbert_de':
+        return 'distilbert-base-german-cased'

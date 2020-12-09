@@ -293,7 +293,7 @@ if __name__ == '__main__':
     parser.add_argument('--transformer_model',
                         choices=[
                             'bert', 'distilbert', 'gpt2', 'roberta', 'transformerxl',
-                            'xlnet', 'albert', 'multilingual'
+                            'xlnet', 'albert', 'multilingual', 'bert_de', 'distilbert_de'
                         ],
                         help='Name of the transformer model.',
                         default='roberta')

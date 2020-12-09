@@ -4,6 +4,15 @@ from utils.helpers import read_lines
 from gector.gec_model import GecBERTModel
 
 
+def predict_for_sent(model):
+    while True:
+        sent = input('>> ')
+        if sent == 'exit':
+            break
+        preds, cnt = model.handle_batch([sent.split()])
+        print(preds)
+
+
 def predict_for_file(input_file, output_file, model, batch_size=32):
     test_data = read_lines(input_file)
     predictions = []
@@ -41,10 +50,13 @@ def main(args):
                          is_ensemble=args.is_ensemble,
                          weigths=args.weights)
 
-    cnt_corrections = predict_for_file(args.input_file, args.output_file, model,
+    if args.mode == 'file':
+        cnt_corrections = predict_for_file(args.input_file, args.output_file, model,
                                        batch_size=args.batch_size)
-    # evaluate with m2 or ERRANT
-    print(f"Produced overall corrections: {cnt_corrections}")
+        # evaluate with m2 or ERRANT
+        print(f"Produced overall corrections: {cnt_corrections}")
+    else:
+        predict_for_sent(model)
 
 
 if __name__ == '__main__':
@@ -59,10 +71,10 @@ if __name__ == '__main__':
                         )
     parser.add_argument('--input_file',
                         help='Path to the evalset file',
-                        required=True)
+                        required=False)
     parser.add_argument('--output_file',
                         help='Path to the output file',
-                        required=True)
+                        required=False)
     parser.add_argument('--max_len',
                         type=int,
                         help='The max sentence length'
@@ -83,8 +95,8 @@ if __name__ == '__main__':
                         default=0)
     parser.add_argument('--transformer_model',
                         choices=[
-                            'bert', 'gpt2', 'transformerxl', 'xlnet',
-                            'distilbert', 'roberta', 'albert', 'multilingual'
+                            'bert', 'gpt2', 'transformerxl', 'xlnet', 'distilbert', 'roberta',
+                            'albert', 'multilingual', 'bert_de', 'distilbert_de'
                         ],
                         help='Name of the transformer model.',
                         default='roberta')
@@ -113,5 +125,8 @@ if __name__ == '__main__':
     parser.add_argument('--weights',
                         help='Used to calculate weighted average', nargs='+',
                         default=None)
+    parser.add_argument('--mode',
+                        help='Run inference on <file> or via <cli>',
+                        choices=['file', 'cli'])
     args = parser.parse_args()
     main(args)
